@@ -261,36 +261,12 @@ void loop() {
             if (hour_zehner>1){if (hour>3){hour_zehner=0;hour=0;} 
           }
         
-          /////////////////////////////////////////
-          //Spi_Siebensegement Digits1-4 schalten//
-          /////////////////////////////////////////
-
-          //Digit 1,2,3 und 4
-          if (sec==0) { 
-                  for(int x=0;x<8;x++) {
-
-                  lc884.setColumn (0,1+x,zahl[0+minute] [0+x]);//Digit4
-                  lc884.setColumn (1,1+x, zahl[0+min_zehner] [0+x]); // Digit3
-                  lc884.setColumn (2,0+x, zahl[0+hour] [0+x]);//Digit2
-                  if (hour_zehner==0){
-                        lc884.setColumn (3,0+x,zahl[10] [0+x]);//Digit1 alle LEDs aus
-                        }else{lc884.setColumn (3,0+x,zahl[0+hour_zehner] [0+x]);// Digit1
-                      }         
-                }
-          }
-           
-           //Colon blink
-          if (tc<500){
-                  lc884.setLed(2,2,7,true);// colon 1 on
-                  lc884.setLed(2,5,7,true);// colon 2 on
-          }else{  lc884.setLed(2,2,7,false);// colon 1 off
-                  lc884.setLed(2,5,7,false);// colon 2 off
-              
-          }    
+          
     
-        //////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////
         //Zwei Uhr Nachts: Laufschrift Ankündigung Display abschalten//
-        /////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////
+
         if (hour_zehner==0 && hour==2 && min_zehner==0 && minute==0){
           //Digit 1 bis 4 Matrix LEDs aus
           for(int x=0;x<8;x++) {
@@ -300,13 +276,10 @@ void loop() {
              lc884.setRow (3,0+x,zahl[10] [0+x]);//Digit1 alle LEDs aus
               }
         
-        
             oneMatrix();
             fourMatrices();
             delay(1000);
-           
-
-              
+             
         }
         
         ///////////////////////////////////////////////////////////
@@ -449,6 +422,30 @@ void loop() {
     }
     } 
     
-  } 
+  }     
+        ///////////////////////////////////
+        //Digit 1,2,3 und 4 Zeit ausgeben//
+        ///////////////////////////////////
 
-}
+          if (sec==0) { 
+                  for(int x=0;x<8;x++) {
+
+                  lc884.setColumn (0,1+x,zahl[0+minute] [0+x]);//Digit4
+                  lc884.setColumn (1,1+x, zahl[0+min_zehner] [0+x]); // Digit3
+                  lc884.setColumn (2,0+x, zahl[0+hour] [0+x]);//Digit2
+                  if (hour_zehner==0){
+                        lc884.setColumn (3,0+x,zahl[10] [0+x]);//Digit1 alle LEDs aus
+                        }else{lc884.setColumn (3,0+x,zahl[0+hour_zehner] [0+x]);// Digit1
+                      }         
+                }
+          }
+           
+           //Colon blink
+          if (tc<500){
+                  lc884.setLed(2,2,7,true);// colon 1 on
+                  lc884.setLed(2,5,7,true);// colon 2 on
+          }else{  lc884.setLed(2,2,7,false);// colon 1 off
+                  lc884.setLed(2,5,7,false);// colon 2 off
+              
+          }    
+} //Ende Void loop
