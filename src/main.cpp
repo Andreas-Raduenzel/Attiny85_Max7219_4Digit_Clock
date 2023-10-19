@@ -253,7 +253,7 @@ void loop() {
           //internal clock//
           /////////////////
 
-            if (tc>998) {tc=0;sec++;}
+            if (tc>990) {tc=0;sec++;}
             if (sec==60) {tc=0;sec=0; minute++;}
             if (minute>9) {minute=0; min_zehner++;}
             if (min_zehner>5) {min_zehner=0;hour++;}
