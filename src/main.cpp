@@ -34,10 +34,10 @@ void timer1_init(void)
   TIMSK |= (1<<OCIE1A);      // Timer/Counter1 Output Compare Interrupt Enable
   TCCR1 = 0; //clear TCCR1-Registers
   TCCR1 |= (1 << CTC1);  //Setze CTC-Mod
-  //TCCR1 |= (1<<CS12)|(1<<CS11);   //prescaling with 32 = bei 8Mhz = 250.000
-  TCCR1 |= (1<<CS12)|(1<<CS11)|(1<<CS10);   //prescaling with 64 = bei 8Mhz = 125.000
-  //OCR1C=249;// compare value / Vergleichswert = (CPU Frequenz[8MHZ] : (Vorteiler [32] x Interruptfrequenz[1000])-1
- OCR1C=124;// compare value / Vergleichswert = (CPU Frequenz[8MHZ] : (Vorteiler [64] x Interruptfrequenz[1000])-1
+  TCCR1 |= (1<<CS12)|(1<<CS11);   //prescaling with 32 = bei 8Mhz = 250.000
+  //TCCR1 |= (1<<CS12)|(1<<CS11)|(1<<CS10);   //prescaling with 64 = bei 8Mhz = 125.000
+  OCR1C=249;// compare value / Vergleichswert = (CPU Frequenz[8MHZ] : (Vorteiler [32] x Interruptfrequenz[1000])-1
+ //OCR1C=124;// compare value / Vergleichswert = (CPU Frequenz[8MHZ] : (Vorteiler [64] x Interruptfrequenz[1000])-1
   sei();
 }
 
@@ -253,8 +253,8 @@ void loop() {
           //internal clock//
           /////////////////
 
-            if (tc>990) {tc=0;sec++;}
-            if (sec==60) {tc=0;sec=0; minute++;}
+            if (tc>993) {sec++;tc=0;}
+            if (sec==60) {sec=0; minute++;}
             if (minute>9) {minute=0; min_zehner++;}
             if (min_zehner>5) {min_zehner=0;hour++;}
             if (hour>9) {hour=0; hour_zehner++;}
