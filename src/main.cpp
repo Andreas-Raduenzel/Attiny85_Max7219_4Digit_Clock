@@ -11,7 +11,7 @@ unsigned char bit_counter=0;
 unsigned char bit_dcf[60]; 
 unsigned char sec=0;
 unsigned char hour_zehner=0,
-              hour=2,
+              hour=3,
               min_zehner=0,
               minute=0; 
 
@@ -31,13 +31,19 @@ tc++;
 void timer1_init(void)
 {
   cli();
+
   TIMSK |= (1<<OCIE1A);      // Timer/Counter1 Output Compare Interrupt Enable
   TCCR1 = 0; //clear TCCR1-Registers
   TCCR1 |= (1 << CTC1);  //Setze CTC-Mod
-  TCCR1 |= (1<<CS12)|(1<<CS11);   //prescaling with 32 = bei 8Mhz = 250.000
-  //TCCR1 |= (1<<CS12)|(1<<CS11)|(1<<CS10);   //prescaling with 64 = bei 8Mhz = 125.000
-  OCR1C=249;// compare value / Vergleichswert = (CPU Frequenz[8MHZ] : (Vorteiler [32] x Interruptfrequenz[1000])-1
- //OCR1C=124;// compare value / Vergleichswert = (CPU Frequenz[8MHZ] : (Vorteiler [64] x Interruptfrequenz[1000])-1
+  //TCCR1 |= (1<<CS12)|(1<<CS11);   //prescaling with 32 = bei 8Mhz = 250.000
+  TCCR1 |= (1<<CS12)|(1<<CS11)|(1<<CS10);   //prescaling with 64 = bei 8Mhz = 125.000
+  //OCR1C=249;// compare value / Vergleichswert = (CPU Frequenz[8MHZ] : (Vorteiler [32] x Interruptfrequenz[1000])-1
+ OCR1C=124;// compare value / Vergleichswert = (CPU Frequenz[8MHZ] : (Vorteiler [64] x Interruptfrequenz[1000])-1
+
+ /*PLLCSR |= (1<<PLLE); 
+ delayMicroseconds(100);  // Eine Verzögerung von 100 Mikrosekunden
+ while(!(PLLCSR & (1<<PLOCK)));
+  PLLCSR |= (1<<PCKE);*/
   sei();
 }
 
@@ -253,7 +259,7 @@ void loop() {
           //internal clock//
           /////////////////
 
-            if (tc>993) {sec++;tc=0;}
+            if (tc>998) {sec++;tc=0;}
             if (sec==60) {sec=0; minute++;}
             if (minute>9) {minute=0; min_zehner++;}
             if (min_zehner>5) {min_zehner=0;hour++;}
@@ -267,7 +273,7 @@ void loop() {
         //Zwei Uhr Nachts: Laufschrift Ankündigung Display abschalten//
         ///////////////////////////////////////////////////////////////
 
-        if (hour_zehner==0 && hour==2 && min_zehner==0 && minute==0){
+        if (hour_zehner==0 && hour==3 && min_zehner==0 && minute==0){
           //Digit 1 bis 4 Matrix LEDs aus
           for(int x=0;x<8;x++) {
              lc884.setRow (0,0+x,zahl[10] [0+x]); //Digit4 alle LEDs aus
@@ -286,7 +292,7 @@ void loop() {
         //Schleife bis DCF Signal mit Prüfbits komplett empfangen//
         ///////////////////////////////////////////////////////////
         
-      if (hour_zehner==0 && hour==2 && min_zehner==0 && minute==0){  
+      if (hour_zehner==0 && hour==3 && min_zehner==0 && minute==0){  
           while (1){
           unsigned char pruefbit_1;// minuten 21-27+ Prüfbit 28
           unsigned char pruefbit_2;// Stunden 29-34 + Prüfbit 35
